@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+	<img src="gamename.gif">
+	<a href="neon-city.html"><div></div></a>
+
+	<style type="text/css">
+		body{
+			position: relative;
+			background: url("bg.gif") no-repeat;
+			background-size: cover;
+		}
+
+		@keyframes test{
+			from{transform: rotate(20deg);}
+			to{transform: rotate(-20deg);}
+		}
+
+		img{
+			position: relative;
+			left: 30%;
+			top: 30px;
+			animation-name: test;
+			animation-duration: 4s;
+			animation-iteration-count: infinite;
+			animation-direction: alternate;
+		}
+
+		div{
+			position: absolute;
+			width: 600px;
+			height: 150px;
+			background: url("but1.gif");
+			left: 30%;
+			top: 500px;
+		}
+		div:hover {
+			background: url("but2.gif");
+		}
+	</style>
+</body>
+</html>
