@@ -4,9 +4,10 @@
 	<title></title>
 </head>
 <body>
-
+	<h3>Song: TK from Ling tosite sigure - P.S. RED</h3>
 	<img src="gamename.gif">
 	<a href="neon-city.html"><div></div></a>
+	<audio src="bgmusic.mp3" autoplay loop></audio>
 
 	<style type="text/css">
 		body{
@@ -16,8 +17,8 @@
 		}
 
 		@keyframes test{
-			from{transform: rotate(20deg);}
-			to{transform: rotate(-20deg);}
+			from{transform: rotate(10deg); width: 600px;}
+			to{transform: rotate(-10deg); width: 650px;}
 		}
 
 		img{
@@ -38,6 +39,30 @@
 			left: 30%;
 			top: 500px;
 		}
+
+		div:hover {
+			background: url("but2.gif");
+		}
+
+		@keyframes textcolor{
+			0%   {color: red;}
+  			25%  {color: yellow;}
+  			50%  {color: green;}
+  			100% {color: blue;}
+		}
+
+		h3{
+			position: absolute;
+			left: 35%;
+			top: 600px;
+			animation-name: textcolor;
+			animation-duration: 4s;
+			animation-iteration-count: infinite;
+			animation-direction: alternate;
+		}
+	</style>
+</body>
+</html>
 		div:hover {
 			background: url("but2.gif");
 		}
