@@ -1,8 +1,24 @@
 body{
 	margin: 0;
 	padding: 0;
-	background: #00041d; 
+	background: url("bg.png"); 
 	}
+
+.glow{
+	font-size: 80px;
+	color: #fff;
+	text-align: center;
+	animation: glow 1s ease-in-out infinite alternate; 
+}
+
+@keyframes glow{
+	from{
+		text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+  	to {
+    	text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+}
+}
 
 .start{
 	position: absolute;
@@ -201,3 +217,20 @@ body{
 		background: rgba(255,20,152,1);
 		transform: scaleX(5);
 	}
+
+@keyframes textcolor{
+	0%   {color: red;}
+  	25%  {color: yellow;}
+  	50%  {color: green;}
+  	100% {color: blue;}
+}
+
+h3{
+	position: fixed;
+	right: 0;
+	top: 700px;
+	animation-name: textcolor;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+}
