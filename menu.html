@@ -1,17 +1,24 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Neon City Breakdown</title>
 </head>
 <body>
 	<h3>Song: TK from Ling tosite sigure - P.S. RED</h3>
 	<img src="gamename.gif">
-	<a href="neon-city.html"><div class="but1"></div></a>
-	<a href=""><div class="but2"></div></a>
-	<a href=""><div class="but3"></div></a>
+	<div class="flex">
+		<a href="neon-city.html"><div class="but1"></div></a>
+		<a href="howtoplay.html"><div class="but2"></div></a>
+		<a href="hallofframe.html"><div class="but3"></div></a>
+	</div>
 	<audio src="bgmusic.mp3" autoplay loop></audio>
 
 	<style type="text/css">
+
+		.flex{
+			display: flex;
+			flex-direction: column;
+		}
+
 		body{
 			position: relative;
 			background: url("bg.gif") no-repeat;
