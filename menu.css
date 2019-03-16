@@ -2,14 +2,14 @@ body{
 	margin: 0;
 	padding: 0;
 	background: url(bg.png);
-	background-position: 0 0;
+	background-position: -100% 0;
 	background-repeat: repeat-x;
 	animation: moving 7s infinite alternate;
 }
 
 @keyframes moving{
 	from{
-		background-position: 0 0;
+		background-position: -100% 0;
 	}
 	to{
 		background-position: 100% 0;
