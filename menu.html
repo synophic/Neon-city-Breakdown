@@ -6,7 +6,9 @@
 <body>
 	<h3>Song: TK from Ling tosite sigure - P.S. RED</h3>
 	<img src="gamename.gif">
-	<a href="neon-city.html"><div></div></a>
+	<a href="neon-city.html"><div class="but1"></div></a>
+	<a href=""><div class="but2"></div></a>
+	<a href=""><div class="but3"></div></a>
 	<audio src="bgmusic.mp3" autoplay loop></audio>
 
 	<style type="text/css">
@@ -31,17 +33,46 @@
 			animation-direction: alternate;
 		}
 
-		div{
+		.but1{
 			position: absolute;
 			width: 600px;
 			height: 150px;
 			background: url("but1.gif");
 			left: 30%;
-			top: 500px;
+			top: 300px;
+			margin: 10px;
 		}
 
-		div:hover {
+		.but1:hover {
 			background: url("but2.gif");
+		}
+
+		.but2{
+			position: absolute;
+			width: 600px;
+			height: 150px;
+			background: url("but21.gif");
+			left: 30%;
+			top: 420px;
+			margin: 10px;
+		}
+
+		.but2:hover {
+			background: url("but22.gif");
+		}
+
+		.but3{
+			position: absolute;
+			width: 600px;
+			height: 150px;
+			background: url("but31.gif");
+			left: 30%;
+			top: 550px;
+			margin: 10px;
+		}
+
+		.but3:hover{
+			background: url("but32.gif");
 		}
 
 		@keyframes textcolor{
@@ -52,9 +83,9 @@
 		}
 
 		h3{
-			position: absolute;
-			left: 35%;
-			top: 600px;
+			position: fixed;
+			right: 0;
+			top: 700px;
 			animation-name: textcolor;
 			animation-duration: 4s;
 			animation-iteration-count: infinite;
@@ -63,4 +94,3 @@
 	</style>
 </body>
 </html>
-
