@@ -1,7 +1,19 @@
 body{
 	margin: 0;
 	padding: 0;
-	background: #00041d;
+	background: url(bgcredit.gif);
+	background-position: 0 80%;
+	background-repeat: repeat-y;
+	animation: moving 120s;
+}
+
+@keyframes moving{
+	from{
+		background-position: 0 0;
+	}
+	to{
+		background-position: 0 80%;
+	}
 }
 
 .back{
