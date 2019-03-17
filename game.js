@@ -31,9 +31,9 @@ Game.World = function(friction = 0.8, gravity = 2) {
   	this.player   = new Game.World.Object.Player(30, 50);
 
 	this.map           = [00,00,00,00,00,00,00,00,00,
-					      13,10,11,12,13,10,11,12,13,
-					      05,06,07,08,09,05,06,07,08,
-					      01,02,03,00,04,02,01,02,01];
+					              13,10,11,12,13,10,11,12,13,
+					              05,06,07,08,09,05,06,07,08,
+					              01,02,03,00,04,02,01,02,01];
 
 	this.collision_map = [0,0,0,0,0,0,0,0,0,
 						  0,0,0,0,0,0,0,0,0,
@@ -313,7 +313,7 @@ Game.World.Object.Player.prototype = {
   	jump: function() {
 
     	if (!this.jumping) {
-
+          if(this.slashing) return;
       		this.jumping     = true;
       		this.velocity_y -= 30;
 
@@ -323,7 +323,7 @@ Game.World.Object.Player.prototype = {
 
   	slash:function(){
 
-  		if(!this.slashing) {
+  		if(!this.slashing && !this.jumping) {
 
   			this.slashing = true;
 
