@@ -56,3 +56,23 @@ canvas { image-rendering:pixelated; }
   text-decoration:none;
 
 }
+
+/*text*/
+
+@keyframes textcolor{
+  0%   {color: red;}
+    25%  {color: yellow;}
+    50%  {color: green;}
+    100% {color: blue;}
+}
+
+.text{
+  position: fixed;
+  right: 0;
+  top: 700px;
+  text-decoration: none;
+  animation-name: textcolor;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
