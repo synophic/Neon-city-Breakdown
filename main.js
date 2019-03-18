@@ -93,7 +93,7 @@ window.addEventListener("load", function(event){
 
 		document.getElementById("score").innerText = "Score: "+game.world.score;
 		/*add highscore*/
-		document.getElementById("highscore").innerText = "Highscore: "+game.world.score;
+		document.getElementById("highscore").innerText = "Highscore: "+game.world.highscore;
 	};
 
 	var update = function(){
