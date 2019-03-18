@@ -1,58 +1,69 @@
 const Game = function() {
 
-  	this.world    = new Game.World();
+    this.world    = new Game.World();
 
-  	this.update   = function() {
+    this.update   = function() {
 
-    	this.world.update();
+      this.world.update();
 
-  	};
+    };
 
 };
 
 Game.prototype = {
-  	constructor : Game
+    constructor : Game
 };
 
 Game.World = function(friction = 0.8, gravity = 2) {
 
-  	this.friction   = friction;
-  	this.gravity    = gravity;
+    this.friction   = friction;
+    this.gravity    = gravity;
 
-  	this.columns    = 12;
-  	this.rows       = 4;
+    this.columns    = 12;
+    this.rows       = 4;
     this.speed      = 3;
     this.offset_map = 0;
     this.score      = 0;
+    this.highscore = 0;
+    this.checkscore = 0;
   
-  	this.tile_set = new Game.World.TileSet(5, 32);
-  	this.player   = new Game.World.Object.Player(30, 0);
+    this.tile_set = new Game.World.TileSet(5, 32);
+    this.player   = new Game.World.Object.Player(30, 0);
     this.berserk  = new Game.World.Object.berserk();
     this.Hit      = new Game.World.Object.Hit(this.player.x, this.player.y);
 
-	this.map           = [00,00,00,00,00,00,00,00,00,00,00,00,
-					      10,11,12,13,14,10,11,12,13,10,12,11,
-					      05,06,07,08,09,05,06,07,08,05,08,06,
-					      01,02,03,02,04,02,01,02,01,03,04,02];
+  this.map           = [00,00,00,00,00,00,00,00,00,00,00,00,
+                10,11,12,13,14,10,11,12,13,10,12,11,
+                05,06,07,08,09,05,06,07,08,05,08,06,
+                01,02,03,02,04,02,01,02,01,03,04,02];
 
-  	this.height   = 128;
-  	this.width    = 288;
+    this.height   = 128;
+    this.width    = 288;
 
 };
 
 Game.World.prototype = {
 
-  	constructor: Game.World,
+    constructor: Game.World,
 
-  	update:function() {
+    update:function() {
 
         this.scroll_map();
         this.score ++;
-    	this.player.updatePosition(this.gravity, this.friction);
-    	this.player.updateAnimation();
+      this.player.updatePosition(this.gravity, this.friction);
+      this.player.updateAnimation();
         this.berserk.updatePosition();
         this.berserk.updateAnimation();
-        if(this.player.collideObject(this.berserk)) this.player.alive = false;
+        if(this.player.collideObject(this.berserk)) 
+        {
+          this.player.alive = false
+          /*add highscore*/
+          this.checkscore = this.score
+          if (this.checkscore > this.highscore) 
+            {
+              this.highscore = this.checkscore
+            }
+        }
         if(this.player.slashing)
         {
             this.Hit.update(this.player.y)
@@ -93,6 +104,7 @@ Game.World.prototype = {
                     10,11,12,13,14,10,11,12,13,10,12,11,
                     05,06,07,08,09,05,06,07,08,05,08,06,
                     01,02,03,02,04,02,01,02,01,03,04,02];
+
         this.offset_map = 0;
         this.score      = 0;
         this.player.reset();
@@ -104,16 +116,16 @@ Game.World.prototype = {
 
 Game.World.Object = function(x, y, width, height) {
 
- 	this.height = height;
- 	this.width  = width;
- 	this.x      = x;
- 	this.y      = y;
+  this.height = height;
+  this.width  = width;
+  this.x      = x;
+  this.y      = y;
 
 };
 
 Game.World.Object.prototype = {
 
-  	constructor:Game.World.Object,
+    constructor:Game.World.Object,
 
     collideObject:function(object) {
 
@@ -135,56 +147,56 @@ Game.World.Object.prototype = {
 
 Game.World.Object.Animator = function(frame_set, delay) {
 
-  	this.count       = 0;
-  	this.delay       = (delay >= 1) ? delay : 1;
-  	this.frame_set   = frame_set;
-  	this.frame_index = 0;
-  	this.frame_value = frame_set[0];
-  	this.mode        = "pause";
+    this.count       = 0;
+    this.delay       = (delay >= 1) ? delay : 1;
+    this.frame_set   = frame_set;
+    this.frame_index = 0;
+    this.frame_value = frame_set[0];
+    this.mode        = "pause";
 
 };
 
 Game.World.Object.Animator.prototype = {
 
-  	constructor:Game.World.Object.Animator,
+    constructor:Game.World.Object.Animator,
 
-  	animate:function() {
+    animate:function() {
 
-    	switch(this.mode) {
+      switch(this.mode) {
 
-      		case "loop" : this.loop(); break;
-      		case "pause":              break;
+          case "loop" : this.loop(); break;
+          case "pause":              break;
 
-    	}
+      }
 
-  	},
+    },
 
-  	changeFrameSet(frame_set, mode, delay = 10, frame_index = 0) {
+    changeFrameSet(frame_set, mode, delay = 10, frame_index = 0) {
 
-    	if (this.frame_set === frame_set) { return; }
+      if (this.frame_set === frame_set) { return; }
 
-    	this.count       = 0;
-    	this.delay       = delay;
-    	this.frame_set   = frame_set;
-    	this.frame_index = frame_index;
-    	this.frame_value = frame_set[frame_index];
-    	this.mode        = mode;
+      this.count       = 0;
+      this.delay       = delay;
+      this.frame_set   = frame_set;
+      this.frame_index = frame_index;
+      this.frame_value = frame_set[frame_index];
+      this.mode        = mode;
 
-  	},
+    },
 
-  	loop:function() {
+    loop:function() {
 
-    	this.count ++;
+      this.count ++;
 
-    	while(this.count > this.delay) {
+      while(this.count > this.delay) {
 
-      	this.count -= this.delay;
-      	this.frame_index = (this.frame_index < this.frame_set.length - 1) ? this.frame_index + 1 : 0;
-      	this.frame_value = this.frame_set[this.frame_index];
+        this.count -= this.delay;
+        this.frame_index = (this.frame_index < this.frame_set.length - 1) ? this.frame_index + 1 : 0;
+        this.frame_value = this.frame_set[this.frame_index];
 
-   		}
+      }
 
-  	}
+    }
 
 };
 
@@ -211,14 +223,14 @@ Game.World.Object.Hit.prototype = {
 Game.World.Object.Player = function(x, y) {
 
     this.x           = x;
-  	this.y           = y;
+    this.y           = y;
     this.width       = 20;
     this.height      = 28;
-  	this.jumping     = false;
-  	this.slashing    = false;
-  	this.velocity_x  = 0;
-  	this.velocity_y  = 0;
-  	this.frame       = 0;
+    this.jumping     = false;
+    this.slashing    = false;
+    this.velocity_x  = 0;
+    this.velocity_y  = 0;
+    this.frame       = 0;
     this.alive       = true;
     this.deadframe   = 0;
 
@@ -229,43 +241,43 @@ Game.World.Object.Player = function(x, y) {
 
 Game.World.Object.Player.prototype = {
 
-  	constructor:Game.World.Object.Player,
+    constructor:Game.World.Object.Player,
 
-  	frame_sets: {
+    frame_sets: {
 
-    	"idle"        : [ 0],
+      "idle"        : [ 0],
         "run"         : [ 1, 2, 3, 4],
         "slash"       : [ 5, 6, 7, 8, 9, 5],
         "jump"        : [10],
         "double-jump" : [11],
         "dead"        : [12,13,14]
 
-  	},
+    },
 
-  	jump: function() {
+    jump: function() {
 
-    	if (!this.jumping) {
+      if (!this.jumping) {
 
-      		this.jumping     = true;
-      		this.velocity_y -= 30;
+          this.jumping     = true;
+          this.velocity_y -= 30;
 
-    	}
+      }
 
-  	},
+    },
 
-  	slash:function(){
+    slash:function(){
 
-  		if(!this.slashing) {
+      if(!this.slashing) {
 
-  			this.slashing = true;
+        this.slashing = true;
 
-  		}
-			
-	},
+      }
+      
+  },
 
-  	updateAnimation:function() {
+    updateAnimation:function() {
 
-		//slashAttack-animation
+    //slashAttack-animation
         if(this.slashing)         this.changeFrameSet(this.frame_sets["slash"], "loop", 3);
 
         //jump-animation
@@ -282,10 +294,10 @@ Game.World.Object.Player.prototype = {
 
         this.animate();
 
-	},
+  },
 
 
-  	updatePosition:function(gravity, friction) {// Changed from the update function
+    updatePosition:function(gravity, friction) {// Changed from the update function
 
         if(this.y + this.height > 96) {
 
@@ -315,15 +327,15 @@ Game.World.Object.Player.prototype = {
         }
             
 
-    	if(this.slashing) {
+      if(this.slashing) {
 
-    		if(this.frame == 15) { this.slashing = false; this.frame = 0; }
+        if(this.frame == 15) { this.slashing = false; this.frame = 0; }
 
-    		this.frame++;
+        this.frame++;
 
-    	}
+      }
 
-  	},
+    },
     reset:function() {
         this.jumping     = false;
         this.slashing    = false;
@@ -402,18 +414,18 @@ Game.World.Object.Hit.prototype.constructor = Game.World.Object.Hit;
 
 Game.World.TileSet = function(columns, tile_size) {
 
-  	this.columns    = columns;
-  	this.tile_size  = tile_size;
+    this.columns    = columns;
+    this.tile_size  = tile_size;
 
-  	let f = Game.World.TileSet.Frame;
+    let f = Game.World.TileSet.Frame;
 
-	this.frames = [            /*Player Sprite*/
+  this.frames = [            /*Player Sprite*/
                    new f( 0,  0, 32, 32, 3, -4), //idle
-				   new f(32,  0, 32, 32, 3, -4), new f(64,  0, 32, 32, 3, -4), new f( 96,  0, 32, 32, 3, -4), new f(128,  0, 32, 32, 3, -4), //run
-				   new f( 0, 32, 32, 32, 3, -4), new f(32, 32, 32, 32, 3, -4), new f( 64, 32, 32, 32, 3, -4), new f( 96, 32, 32, 32, 3, -4), new f(128, 32, 32, 32, 3, -4), //slash
-				   new f( 0, 96, 32, 32, 3, -4), //jump
+           new f(32,  0, 32, 32, 3, -4), new f(64,  0, 32, 32, 3, -4), new f( 96,  0, 32, 32, 3, -4), new f(128,  0, 32, 32, 3, -4), //run
+           new f( 0, 32, 32, 32, 3, -4), new f(32, 32, 32, 32, 3, -4), new f( 64, 32, 32, 32, 3, -4), new f( 96, 32, 32, 32, 3, -4), new f(128, 32, 32, 32, 3, -4), //slash
+           new f( 0, 96, 32, 32, 3, -4), //jump
                    new f(32, 96, 32, 32, 3, -4), //doublejump
-				   new f(64, 96, 32, 32, 3, -4), new f(96, 96, 32, 32, 3, -4), new f(128, 96, 32, 32, 3, -4), // dead
+           new f(64, 96, 32, 32, 3, -4), new f(96, 96, 32, 32, 3, -4), new f(128, 96, 32, 32, 3, -4), // dead
 
                                /*Enemy sprite*/
                             /*Spin berserk Sprite*/
@@ -424,7 +436,7 @@ Game.World.TileSet = function(columns, tile_size) {
                    new f( 0, 64, 32, 32, 3, -3),new f(32, 64, 32, 32, 3, -3),new f(64, 64, 32, 32, 3, -3),new f(96, 64, 32, 32, 3, -3),
                             /*Danger Sprite*/
                    new f( 0, 96, 32, 32, 2, -2),new f(32, 96, 32, 32, 2, -2)
-				   ];
+           ];
 
 };
 
@@ -432,12 +444,12 @@ Game.World.TileSet.prototype = { constructor: Game.World.TileSet };
 
 Game.World.TileSet.Frame = function(x, y, width, height, offset_x, offset_y) {
 
-  	this.x        = x;
-  	this.y        = y;
-  	this.width    = width;
-  	this.height   = height;
-  	this.offset_x = offset_x;
-  	this.offset_y = offset_y;
+    this.x        = x;
+    this.y        = y;
+    this.width    = width;
+    this.height   = height;
+    this.offset_x = offset_x;
+    this.offset_y = offset_y;
 
 };
 
