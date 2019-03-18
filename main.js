@@ -69,6 +69,10 @@ window.addEventListener("load", function(event){
 
 		let frame = game.world.tile_set.frames[game.world.player.frame_value];
 
+		/* if you want to check a hitbox uncomment this
+		display.drawRectangle(game.world.player.x, game.world.player.y, game.world.player.width, game.world.player.height, "#ff0000");
+		if(game.world.player.slashing) display.drawRectangle(game.world.player.x + 20, game.world.player.y, 10, game.world.player.height, "#00ff00");*/
+		
 		display.drawObject(assets_manager.player_tile_set,
 		frame.x, frame.y,
 		game.world.player.x + Math.floor(game.world.player.width * 0.5 - frame.width * 0.5) + frame.offset_x,

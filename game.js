@@ -16,29 +16,24 @@ Game.prototype = {
 
 };
 
-Game.World = function(friction = 0.8, gravity = 2) {
+Game.World = function(friction = 0.8, gravity = 1.5) {
 
   	this.collider = new Game.World.Collider();
 
   	this.friction = friction;
   	this.gravity  = gravity;
 
-  	this.columns   = 9;
+  	this.columns   = 12;
   	this.rows      = 4;
 
   
   	this.tile_set = new Game.World.TileSet(5, 32);
-  	this.player   = new Game.World.Object.Player(30, 50);
+  	this.player   = new Game.World.Object.Player(30, 0);
 
-	this.map           = [00,00,00,00,00,00,00,00,00,
-					              13,10,11,12,13,10,11,12,13,
-					              05,06,07,08,09,05,06,07,08,
-					              01,02,03,00,04,02,01,02,01];
-
-	this.collision_map = [0,0,0,0,0,0,0,0,0,
-						  0,0,0,0,0,0,0,0,0,
-						  0,0,0,0,0,0,0,0,0,
-						  1,1,1,1,1,1,1,1,1];
+	this.map = [00,00,00,00,00,00,00,00,00,00,00,00,
+				13,10,11,12,13,10,11,12,13,10,12,11,
+				05,06,07,08,09,05,06,07,08,05,08,06,
+				01,02,03,02,04,02,01,02,01,03,04,02];
 
   	this.height   = 128;
   	this.width    = 288;
@@ -49,42 +44,9 @@ Game.World.prototype = {
 
   	constructor: Game.World,
 
-  	collideObject:function(object) {
-
-    	if      (object.getLeft()   < 0          ) { object.setLeft(0);             object.velocity_x = 0; }
-    	else if (object.getRight()  > this.width ) { object.setRight(this.width);   object.velocity_x = 0; }
-    	if      (object.getTop()    < 0          ) { object.setTop(0);              object.velocity_y = 0; }
-    	else if (object.getBottom() > this.height) { object.setBottom(this.height); object.velocity_y = 0; object.jumping = false; }
-
-    	var bottom, left, right, top, value;
-
-    	top    = Math.floor(object.getTop()    / this.tile_set.tile_size);
-    	left   = Math.floor(object.getLeft()   / this.tile_set.tile_size);
-    	value  = this.collision_map[top * this.columns + left];
-    	this.collider.collide(value, object, left * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
-
-    	top    = Math.floor(object.getTop()    / this.tile_set.tile_size);
-    	right  = Math.floor(object.getRight()  / this.tile_set.tile_size);
-    	value  = this.collision_map[top * this.columns + right];
-    	this.collider.collide(value, object, right * this.tile_set.tile_size, top * this.tile_set.tile_size, this.tile_set.tile_size);
-
-    	bottom = Math.floor(object.getBottom() / this.tile_set.tile_size);
-    	left   = Math.floor(object.getLeft()   / this.tile_set.tile_size);
-    	value  = this.collision_map[bottom * this.columns + left];
-    	this.collider.collide(value, object, left * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
-
-    	bottom = Math.floor(object.getBottom() / this.tile_set.tile_size);
-    	right  = Math.floor(object.getRight()  / this.tile_set.tile_size);
-    	value  = this.collision_map[bottom * this.columns + right];
-    	this.collider.collide(value, object, right * this.tile_set.tile_size, bottom * this.tile_set.tile_size, this.tile_set.tile_size);
-
-  	},
-
   	update:function() {
 
     	this.player.updatePosition(this.gravity, this.friction);
-
-    	this.collideObject(this.player);
 
     	this.player.updateAnimation();
 
@@ -283,15 +245,19 @@ Game.World.Object.Animator.prototype = {
 
 Game.World.Object.Player = function(x, y) {
 
-  	Game.World.Object.call(this, 30, 50, 32, 32);
-  	Game.World.Object.Animator.call(this, Game.World.Object.Player.prototype.frame_sets["idle"], 10);
-
+    this.x           = x;
+  	this.y           = y;
+    this.width       = 20;
+    this.height      = 28;
   	this.jumping     = false;
   	this.slashing    = false;
   	this.slash_hit   = false;
   	this.velocity_x  = 0;
   	this.velocity_y  = 0;
   	this.frame       = 0;
+
+    Game.World.Object.call(this.x, this.y, this.width, this.height);
+    Game.World.Object.Animator.call(this, Game.World.Object.Player.prototype.frame_sets["idle"], 10);
 
 };
 
@@ -301,21 +267,21 @@ Game.World.Object.Player.prototype = {
 
   	frame_sets: {
 
-    	"idle"      : [0],
-  		"run"       : [1, 2, 3, 4],
-  		"slash"     : [5, 6, 7, 8, 9, 5],
-  		"jump-slash": [10, 11, 12, 13, 14],
-  		"jump"      : [15, 16],
-  		"dead"      : [17, 18, 19]
+    	"idle"        : [0],
+  		"run"         : [1, 2, 3, 4],
+  		"slash"       : [5, 6, 7, 8, 9, 5],
+  		"jump"        : [15],
+  		"double-jump" : [16],
+  		"dead"        : [17, 18, 19]
 
   	},
 
   	jump: function() {
 
     	if (!this.jumping) {
-          if(this.slashing) return;
+
       		this.jumping     = true;
-      		this.velocity_y -= 30;
+      		this.velocity_y -= 25;
 
     	}
 
@@ -323,7 +289,7 @@ Game.World.Object.Player.prototype = {
 
   	slash:function(){
 
-  		if(!this.slashing && !this.jumping) {
+  		if(!this.slashing) {
 
   			this.slashing = true;
 
@@ -333,11 +299,17 @@ Game.World.Object.Player.prototype = {
 
   	updateAnimation:function() {
 
-		if(this.slashing && !this.jumping)	  this.changeFrameSet(this.frame_sets["slash"], "loop", 3);
+        //slashAttack-animation
+		if(this.slashing)	      this.changeFrameSet(this.frame_sets["slash"], "loop", 3);
 
-		else if(this.jumping) this.changeFrameSet(this.frame_sets["jump"], "pause");
+        //jump-animation
+        else if(this.y < 68) {
+            if(!this.jumping)     this.changeFrameSet(this.frame_sets["jump"], "pause");
+            else if(this.jumping) this.changeFrameSet(this.frame_sets["double-jump"], "pause");
+        }
 
-		else				  this.changeFrameSet(this.frame_sets["run"], "loop", 5);
+        //run-animation
+		else				      this.changeFrameSet(this.frame_sets["run"], "loop", 5);
 
 		this.animate();
 
@@ -346,18 +318,31 @@ Game.World.Object.Player.prototype = {
 
   	updatePosition:function(gravity, friction) {// Changed from the update function
 
-    	this.x_old       = this.x;
-    	this.y_old       = this.y;
-    	this.velocity_y += gravity;
-    	this.x          += this.velocity_x;
-    	this.y          += this.velocity_y;
+        if(this.y + this.height > 96) {
 
-    	this.velocity_x *= friction;
-    	this.velocity_y *= friction;
+            this.y             = 68;
+            Game.World.gravity = 0;
+            this.jumping       = false;
 
-    	if(this.slashing && !this.jumping) {
+        }
+
+        if(this.y < 0) this.y = 0;
+
+        else if(this.y + this.height < 96) Game.World.gravity = 1.5;
+
+        this.x_old       = this.x;
+        this.y_old       = this.y;
+        this.velocity_y += gravity;
+        this.x          += this.velocity_x;
+        this.y          += this.velocity_y;
+        
+        this.velocity_x *= friction;
+        this.velocity_y *= friction;
+
+    	if(this.slashing) {
 
     		if(this.frame == 15) { this.slashing = false; this.frame = 0; }
+
     		this.frame++;
 
     	}
@@ -377,12 +362,12 @@ Game.World.TileSet = function(columns, tile_size) {
 
   	let f = Game.World.TileSet.Frame;
 
-	this.frames = [new f( 0,  0, 32, 32, 0, 0), //idle
-				   new f(32,  0, 32, 32, 0, 0), new f(64,  0, 32, 32, 0, 0), new f( 96,  0, 32, 32, 0, 0), new f(128,  0, 32, 32, 0, 0), //run
-				   new f( 0, 32, 32, 32, 0, 0), new f(32, 32, 32, 32, 0, 0), new f( 64, 32, 32, 32, 0, 0), new f( 96, 32, 32, 32, 0, 0), new f(128, 32, 32, 32, 0, 0), //slash
-				   new f( 0, 64, 32, 32, 0, 0), new f(32, 64, 32, 32, 0, 0), new f( 64, 64, 32, 32, 0, 0), new f( 96, 64, 32, 32, 0, 0), new f(128, 64, 32, 32, 0, 0), //jump-slash
-				   new f( 0, 96, 32, 32, 0, 0), new f(32, 96, 32, 32, 0, 0), //jump
-				   new f(64, 96, 32, 32, 0, 0), new f(96, 96, 32, 32, 0, 0), new f(128, 96, 32, 32, 0, 0), // dead
+	this.frames = [new f( 0,  0, 32, 32, 3, -4), //idle
+				   new f(32,  0, 32, 32, 3, -4), new f(64,  0, 32, 32, 3, -4), new f( 96,  0, 32, 32, 3, -4), new f(128,  0, 32, 32, 3, -4), //run
+				   new f( 0, 32, 32, 32, 3, -4), new f(32, 32, 32, 32, 3, -4), new f( 64, 32, 32, 32, 3, -4), new f( 96, 32, 32, 32, 3, -4), new f(128, 32, 32, 32, 3, -4), //slash
+				   new f( 0, 64, 32, 32, 3, -4), new f(32, 64, 32, 32, 3, -4), new f( 64, 64, 32, 32, 3, -4), new f( 96, 64, 32, 32, 3, -4), new f(128, 64, 32, 32, 3, -4), //jump-slash
+				   new f( 0, 96, 32, 32, 3, -4), new f(32, 96, 32, 32, 3, -4), //jump
+				   new f(64, 96, 32, 32, 3, -4), new f(96, 96, 32, 32, 3, -4), new f(128, 96, 32, 32, 3, -4), // dead
 				   ];
 
 };
