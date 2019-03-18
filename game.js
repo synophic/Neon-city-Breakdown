@@ -93,6 +93,8 @@ Game.World.prototype = {
                     10,11,12,13,14,10,11,12,13,10,12,11,
                     05,06,07,08,09,05,06,07,08,05,08,06,
                     01,02,03,02,04,02,01,02,01,03,04,02];
+        this.offset_map = 0;
+        this.score      = 0;
         this.player.reset();
         this.berserk.reset();
 
