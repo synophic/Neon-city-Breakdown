@@ -76,3 +76,13 @@ canvas { image-rendering:pixelated; }
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
+
+#score{
+  color: white;
+  font-family: sans-serif;
+  position: absolute;
+  font-size: 20px;
+  left: 90%;
+  top: 1%;
+  text-shadow: 0 0 16px #FF0000, 0 0 16px #fff;
+}
