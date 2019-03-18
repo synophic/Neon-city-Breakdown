@@ -23,6 +23,7 @@ Game.World = function(friction = 0.8, gravity = 2) {
   	this.rows       = 4;
     this.speed      = 3;
     this.offset_map = 0;
+    this.score      = 0;
   
   	this.tile_set = new Game.World.TileSet(5, 32);
   	this.player   = new Game.World.Object.Player(30, 0);
@@ -46,6 +47,7 @@ Game.World.prototype = {
   	update:function() {
 
         this.scroll_map();
+        this.score ++;
     	this.player.updatePosition(this.gravity, this.friction);
     	this.player.updateAnimation();
         this.berserk.updatePosition();
@@ -54,7 +56,11 @@ Game.World.prototype = {
         if(this.player.slashing)
         {
             this.Hit.update(this.player.y)
-            if(this.berserk.collideObject(this.Hit)) this.berserk.reset();
+            if(this.berserk.collideObject(this.Hit)) {
+                this.berserk.reset();
+                this.score += 300;
+            }
+
         }
 
     },
@@ -78,6 +84,17 @@ Game.World.prototype = {
             this.map.splice(47, 0, Math.floor(Math.random() * 4 + 1));
 
         }
+
+    },
+
+    reset:function() {
+
+        this.map = [00,00,00,00,00,00,00,00,00,00,00,00,
+                    10,11,12,13,14,10,11,12,13,10,12,11,
+                    05,06,07,08,09,05,06,07,08,05,08,06,
+                    01,02,03,02,04,02,01,02,01,03,04,02];
+        this.player.reset();
+        this.berserk.reset();
 
     }
 
@@ -201,6 +218,7 @@ Game.World.Object.Player = function(x, y) {
   	this.velocity_y  = 0;
   	this.frame       = 0;
     this.alive       = true;
+    this.deadframe   = 0;
 
     Game.World.Object.call(this.x, this.y, this.width, this.height);
     Game.World.Object.Animator.call(this, Game.World.Object.Player.prototype.frame_sets["idle"], 10);
@@ -254,6 +272,9 @@ Game.World.Object.Player.prototype = {
             else if(this.jumping) this.changeFrameSet(this.frame_sets["double-jump"], "pause");
         }
 
+        //dead-animation
+        else if(!this.alive)       this.changeFrameSet(this.frame_sets["dead"], "loop", 10);
+
         //run-animation
         else                      this.changeFrameSet(this.frame_sets["run"], "loop", 5);
 
@@ -285,8 +306,12 @@ Game.World.Object.Player.prototype = {
         this.velocity_x *= friction;
         this.velocity_y *= friction;
         
+        if(!this.alive) {
 
-        
+            this.deadframe++;
+
+        }
+            
 
     	if(this.slashing) {
 
@@ -296,13 +321,22 @@ Game.World.Object.Player.prototype = {
 
     	}
 
-  	}
+  	},
+    reset:function() {
+        this.jumping     = false;
+        this.slashing    = false;
+        this.velocity_x  = 0;
+        this.velocity_y  = 0;
+        this.frame       = 0;
+        this.alive       = true;
+        this.deadframe   = 0;
+    }
 
 };
 
 Game.World.Object.berserk = function() {
 
-    this.x          = 55;
+    this.x          = 300;
     this.y          = 50;
     this.width      = 28;
     this.height     = 26;

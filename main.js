@@ -70,12 +70,12 @@ window.addEventListener("load", function(event){
 		let frame = game.world.tile_set.frames[game.world.player.frame_value];
 		let bframe = game.world.tile_set.frames[game.world.berserk.frame_value];
 
-		/*		if you want to see a hit box uncomment this
+		/*		if you want to see hitbox uncomment this
 		display.drawRectangle(game.world.player.x, game.world.player.y, game.world.player.width, game.world.player.height, "#ff0000");
 		display.drawRectangle(game.world.berserk.x, game.world.berserk.y, game.world.berserk.width, game.world.berserk.height, "#0000ff");
 		if(game.world.player.slashing) display.drawRectangle(game.world.player.x + 20, game.world.player.y, 10, game.world.player.height, "#00ff00");
 		*/
-		
+
 		display.drawObject(assets_manager.player_tile_set,
 		frame.x, frame.y,
 		game.world.player.x + Math.floor(game.world.player.width * 0.5 - frame.width * 0.5) + frame.offset_x,
@@ -87,16 +87,25 @@ window.addEventListener("load", function(event){
 		game.world.berserk.x + Math.floor(game.world.berserk.width * 0.5 - bframe.width * 0.5) + bframe.offset_x,
 		game.world.berserk.y + bframe.offset_y,
 		bframe.width, bframe.height);
+		if(!game.world.player.alive) display.drawRectangle(0, 0, game.world.width, game.world.height, "rgba(255, 0, 0, "+game.world.player.deadframe/100+")");
 
 		display.render();
 
 	};
 
 	var update = function(){
+
+		if(!game.world.player.alive) { 
+			controller.jump.active = false; 
+			controller.slash.active = false;
+			if(game.world.player.deadframe == 30) {
+				game.world.reset()
+			}
+		}
 		/*jumpu*/
-		if(controller.jump.active) {game.world.player.jump(); controller.jump.active = false;}
+		else if(controller.jump.active) {game.world.player.jump(); controller.jump.active = false;}
 		/*slashu*/
-		if(controller.slash.active) {game.world.player.slash(); controller.slash.active = false;}
+		else if(controller.slash.active) {game.world.player.slash(); controller.slash.active = false;}
 
 		game.update();
 
