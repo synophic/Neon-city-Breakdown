@@ -86,3 +86,13 @@ canvas { image-rendering:pixelated; }
   top: 1%;
   text-shadow: 0 0 16px #FF0000, 0 0 16px #fff;
 }
+
+#highscore{
+  color: white;
+  font-family: sans-serif;
+  position: absolute;
+  font-size: 20px;
+  left: 80%;
+  top: 1%;
+  text-shadow: 0 0 16px #FF0000, 0 0 16px #fff;
+}
